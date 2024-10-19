@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "463396774250",
+    "project_id": "elrazzyclinics",
+    "storage_bucket": "elrazzyclinics.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:463396774250:android:2a52bd34a71816babb8513",
+        "android_client_info": {
+          "package_name": "com.example.elrazy_clinics"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD8yOj1HNul2sQFWPaoheqiVyCEAvESrBE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
