@@ -131,12 +131,12 @@ class AppointmentHourWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final appointmentCubit = BlocProvider.of<AppointmentCubit>(context);
+    // Start listening for changes for this specific appointment time
     appointmentCubit.getAppointmentData(appointmentTime.toIso8601String());
 
     return BlocConsumer<AppointmentCubit, AppointmentState>(
       listener: (context, state) {},
       builder: (context, state) {
-        // Ensure the bookedCount corresponds to the specific appointment time
         final bookedCount =
             appointmentCubit.getBookedCountForTime(appointmentTime);
         bool availability = bookedCount == null || bookedCount < 6;
