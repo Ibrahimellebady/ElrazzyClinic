@@ -65,7 +65,10 @@ class AppointmentCubit extends Cubit<AppointmentState> {
   }
 
   AppointmentModel? appointmentModel;
-  void getAppointmentData(String appointmentID) async {
+
+  final Map<String, AppointmentModel> _appointmentModels = {};
+
+  Future<void> getAppointmentData(String appointmentID) async {
     try {
       DocumentSnapshot<Map<String, dynamic>> docSnapshot =
           await FirebaseFirestore.instance
@@ -79,6 +82,8 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
         if (data != null) {
           appointmentModel = AppointmentModel.fromJson(data);
+          // Store the appointment model in the map
+          _appointmentModels[appointmentID] = appointmentModel!;
           print(
               "Appointment Model: ${appointmentModel?.toJson()}"); // Debug print
           emit(SuccessGetAppointmentDataState(appointmentModel));
@@ -93,5 +98,16 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     } on FirebaseException catch (e) {
       print("Error fetching appointment data from Firestore: $e");
     }
+  }
+
+  int? getBookedCountForTime(DateTime appointmentTime) {
+    // Create a string representation of the appointment time
+    String appointmentID = appointmentTime.toIso8601String();
+
+    // Check if we have the appointment model for that ID
+    AppointmentModel? model = _appointmentModels[appointmentID];
+
+    // Return the booked count if the model exists
+    return model?.booked;
   }
 }
