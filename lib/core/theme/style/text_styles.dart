@@ -30,6 +30,11 @@ class AppTextStyle {
       fontSize: 16,
       fontWeight: FontWeight.w800,
       fontFamily: 'garet');
+  static TextStyle mainColorGaretTextStyle18 = TextStyle(
+      color: ColorManager.mainColor,
+      fontSize: 18,
+      fontWeight: FontWeight.w800,
+      fontFamily: 'garet');
 
   static TextStyle underlineClickTextStyle = TextStyle(
       decoration: TextDecoration.underline,
@@ -70,6 +75,12 @@ class AppTextStyle {
   //
   static TextStyle redColorBoldTextStyle16 = TextStyle(
       color: Colors.red,
+      fontSize: 16,
+      fontWeight: FontWeight.w800,
+      fontFamily: 'garet');
+//
+  static TextStyle thirdColorBoldTextStyle16 = TextStyle(
+      color: ColorManager.thirdColor,
       fontSize: 16,
       fontWeight: FontWeight.w800,
       fontFamily: 'garet');

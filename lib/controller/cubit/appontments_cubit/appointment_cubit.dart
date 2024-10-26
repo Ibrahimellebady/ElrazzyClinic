@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:elrazy_clinics/core/constants/constants.dart';
 import 'package:elrazy_clinics/core/models/appointment_model.dart';
 import 'package:meta/meta.dart';
 
@@ -64,6 +65,22 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     }
   }
 
+  Future<void> updateAppointmentFromFireStore(
+      String appointmentID, Map<String, dynamic> updates) async {
+    try {
+      DocumentReference appointmentDoc = FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(appointmentID);
+
+      await appointmentDoc.update(updates);
+      print('Document updated successfully');
+      emit(FailedToGetAppointmentDataState());
+    } on FirebaseException catch (e) {
+      print("Failed to update appointment data in Firestore: $e");
+      emit(FailedToGetAppointmentDataState());
+    }
+  }
+
   AppointmentModel? appointmentModel;
 
   final Map<String, AppointmentModel> _appointmentModels = {};
@@ -105,5 +122,45 @@ class AppointmentCubit extends Cubit<AppointmentState> {
 
     // Return the booked count if the model exists
     return model?.booked;
+  }
+
+  List<String>? getBookedClientsForTime(DateTime appointmentTime) {
+    String appointmentID = appointmentTime.toIso8601String();
+    AppointmentModel? model = _appointmentModels[appointmentID];
+    return model?.clientIDs;
+  }
+
+  Future<void> getNextAppointmentForUser() async {
+    try {
+      // Get the current date and time
+      DateTime now = DateTime.now();
+
+      // Query the Firestore for appointments that include the clientID and are scheduled in the future
+      QuerySnapshot<Map<String, dynamic>> querySnapshot =
+          await FirebaseFirestore.instance
+              .collection('appointments')
+              .where('clientIDs', arrayContains: Constants.userID)
+              .orderBy('appointmentTime')
+              .limit(1) // Only get the next appointment
+              .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        // If there's at least one appointment, get the first one
+        DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+            querySnapshot.docs.first;
+        AppointmentModel nextAppointment =
+            AppointmentModel.fromJson(docSnapshot.data()!);
+
+        print(
+            "Next appointment retrieved successfully: ${nextAppointment.toJson()}");
+        emit(SuccessGetNextAppointmentState(nextAppointment));
+      } else {
+        print("No upcoming appointments found for user: ${Constants.userID}");
+        emit(NoNextAppointmentFoundState());
+      }
+    } on FirebaseException catch (e) {
+      print("Failed to retrieve next appointment: $e");
+      emit(FailedToGetNextAppointmentState());
+    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../controller/cubit/auth_cubit/user_cubit.dart';
 import '../../../../core/theme/colors.dart';
+import '../../../../generated/l10n.dart';
 
 class HomeTopBarWidget extends StatelessWidget {
   const HomeTopBarWidget({super.key});
@@ -34,7 +35,7 @@ class HomeTopBarWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Hi, ${user?.firstName} ",
+                        "${S.of(context).hello}, ${user?.firstName} ",
                         style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -42,7 +43,7 @@ class HomeTopBarWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "Are you ready to learn?",
+                        "How are you today?",
                         style: TextStyle(
                           fontWeight: FontWeight.w300,
                           fontStyle: FontStyle.italic,

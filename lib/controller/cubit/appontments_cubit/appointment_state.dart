@@ -16,3 +16,13 @@ final class FailedToGetAppointmentDataState extends AppointmentState {}
 final class SuccessGetAppointmentDataState extends AppointmentState {
   SuccessGetAppointmentDataState(AppointmentModel? appointmentModel);
 }
+
+class FailedToGetNextAppointmentState extends AppointmentState {}
+
+class NoNextAppointmentFoundState extends AppointmentState {}
+
+class SuccessGetNextAppointmentState extends AppointmentState {
+  final AppointmentModel nextAppointment;
+
+  SuccessGetNextAppointmentState(this.nextAppointment);
+}
