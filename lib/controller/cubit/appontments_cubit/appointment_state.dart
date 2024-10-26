@@ -26,3 +26,16 @@ class SuccessGetNextAppointmentState extends AppointmentState {
 
   SuccessGetNextAppointmentState(this.nextAppointment);
 }
+
+class SuccessGetUserAppointmentsState extends AppointmentState {
+  final List<AppointmentModel> appointments;
+  SuccessGetUserAppointmentsState(this.appointments);
+}
+
+class NoAppointmentsFoundForUserState extends AppointmentState {}
+
+class FailedToGetUserAppointmentsState extends AppointmentState {}
+
+class SuccessDeleteAppointmentState extends AppointmentState {}
+
+class FailedToDeleteAppointmentState extends AppointmentState {}

@@ -9,13 +9,13 @@ class UserModel {
 
 // optional
   String? image;
-  String? chooseStatus;
-  String? university;
+
   String? address;
   String? sex;
   String? birthDate;
-
 // backend
+  String? chiefComplain;
+  List<String>? attachments;
 
   UserModel({
     this.id,
@@ -24,12 +24,12 @@ class UserModel {
     this.lastName,
     this.email,
     this.password,
-    this.chooseStatus,
-    this.university,
     this.address,
     this.phoneNumber,
     this.sex,
     this.birthDate,
+    this.chiefComplain,
+    this.attachments,
   });
 
   // From JSON
@@ -40,12 +40,13 @@ class UserModel {
     lastName = data['lastName'];
     email = data['email'];
     password = data['password'];
-    chooseStatus = data['chooseStatus'];
-    university = data['university'];
+
     address = data['address'];
     phoneNumber = data['phoneNumber'];
     sex = data['sex'];
     birthDate = data['birthDate'];
+    chiefComplain = data['chiefComplain'];
+    attachments = data['attachments'];
   }
 
   // To JSON
@@ -57,12 +58,12 @@ class UserModel {
       'lastName': lastName,
       'email': email,
       'password': password,
-      'chooseStatus': chooseStatus,
-      'university': university,
       'address': address,
       'phoneNumber': phoneNumber,
       'sex': sex,
       'birthDate': birthDate,
+      'chiefComplain': chiefComplain ?? "",
+      "attachments": attachments ?? [""],
     };
   }
 }

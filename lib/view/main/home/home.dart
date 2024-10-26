@@ -1,5 +1,4 @@
 import 'package:elrazy_clinics/controller/cubit/appontments_cubit/appointment_cubit.dart';
-import 'package:elrazy_clinics/view/main/home/appointment_screen.dart';
 import 'package:elrazy_clinics/view/main/home/home_widgets/next_appointment_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,7 +16,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   DateTime _focusedDay = DateTime.now();
-  DateTime? _selectedDay;
 
   @override
   void initState() {
@@ -41,17 +39,17 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
             children: [
               HomeTopBarWidget(),
-              InkWell(
-                onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => AppointmentScreen(),
-                    ),
-                  );
-                },
-                child: Text("navigate"),
-              ),
+              // InkWell(
+              //   onTap: () {
+              //     Navigator.push(
+              //       context,
+              //       MaterialPageRoute(
+              //         builder: (context) => AppointmentScreen(),
+              //       ),
+              //     );
+              //   },
+              //   child: Text("navigate"),
+              // ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(16),

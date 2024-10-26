@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:elrazy_clinics/core/constants/constants.dart';
@@ -71,13 +73,26 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       DocumentReference appointmentDoc = FirebaseFirestore.instance
           .collection('appointments')
           .doc(appointmentID);
-
       await appointmentDoc.update(updates);
       print('Document updated successfully');
       emit(FailedToGetAppointmentDataState());
     } on FirebaseException catch (e) {
       print("Failed to update appointment data in Firestore: $e");
       emit(FailedToGetAppointmentDataState());
+    }
+  }
+
+  Future<void> deleteAppointmentFromFireStore(String appointmentID) async {
+    try {
+      DocumentReference appointmentDoc = FirebaseFirestore.instance
+          .collection('appointments')
+          .doc(appointmentID);
+      await appointmentDoc.delete();
+      print('Document deleted successfully');
+      emit(SuccessDeleteAppointmentState());
+    } on FirebaseException catch (e) {
+      print("Failed to delete appointment data in Firestore: $e");
+      emit(FailedToDeleteAppointmentState());
     }
   }
 
@@ -135,25 +150,34 @@ class AppointmentCubit extends Cubit<AppointmentState> {
       // Get the current date and time
       DateTime now = DateTime.now();
 
-      // Query the Firestore for appointments that include the clientID and are scheduled in the future
+      // Query the Firestore for appointments scheduled in the future (no client filter yet)
       QuerySnapshot<Map<String, dynamic>> querySnapshot =
           await FirebaseFirestore.instance
               .collection('appointments')
-              .where('clientIDs', arrayContains: Constants.userID)
+              .where('appointmentTime',
+                  isGreaterThanOrEqualTo:
+                      now.toString()) // Only filter by appointment time
               .orderBy('appointmentTime')
-              .limit(1) // Only get the next appointment
               .get();
 
+      // Filter the result by clientID locally
       if (querySnapshot.docs.isNotEmpty) {
-        // If there's at least one appointment, get the first one
         DocumentSnapshot<Map<String, dynamic>> docSnapshot =
             querySnapshot.docs.first;
-        AppointmentModel nextAppointment =
-            AppointmentModel.fromJson(docSnapshot.data()!);
+        Map<String, dynamic> appointmentData = docSnapshot.data()!;
 
-        print(
-            "Next appointment retrieved successfully: ${nextAppointment.toJson()}");
-        emit(SuccessGetNextAppointmentState(nextAppointment));
+        // Check if the clientID is part of this appointment's clientIDs array
+        if ((appointmentData['clientIDs'] as List).contains(Constants.userID)) {
+          AppointmentModel nextAppointment =
+              AppointmentModel.fromJson(appointmentData);
+          print(
+              "Next appointment retrieved successfully: ${nextAppointment.toJson()}");
+          emit(SuccessGetNextAppointmentState(nextAppointment));
+        } else {
+          print(
+              "No upcoming appointments found for=========== user: ${Constants.userID}");
+          emit(NoNextAppointmentFoundState());
+        }
       } else {
         print("No upcoming appointments found for user: ${Constants.userID}");
         emit(NoNextAppointmentFoundState());
@@ -161,6 +185,28 @@ class AppointmentCubit extends Cubit<AppointmentState> {
     } on FirebaseException catch (e) {
       print("Failed to retrieve next appointment: $e");
       emit(FailedToGetNextAppointmentState());
+    } catch (e) {
+      print("Unexpected error: $e");
+      emit(FailedToGetNextAppointmentState());
     }
+  }
+
+  Timer? _timer;
+
+  void startAutoRefresh() {
+    // Refresh the appointment every 1 seconds (for example)
+    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      getNextAppointmentForUser();
+    });
+  }
+
+  void stopAutoRefresh() {
+    _timer?.cancel();
+  }
+
+  @override
+  Future<void> close() {
+    stopAutoRefresh();
+    return super.close();
   }
 }

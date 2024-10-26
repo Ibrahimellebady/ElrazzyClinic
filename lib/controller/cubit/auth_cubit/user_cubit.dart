@@ -151,6 +151,35 @@ class UserCubit extends Cubit<UserState> {
     }
   }
 
+  void getUsersDataByUserID(String userID) async {
+    emit(
+        GetUsersLoadingState()); // Emit loading state before starting the operation
+    try {
+      DocumentSnapshot<Map<String, dynamic>> docSnapshot =
+          await FirebaseFirestore.instance
+              .collection('users')
+              .doc(userID)
+              .get();
+
+      if (docSnapshot.exists) {
+        final data = docSnapshot.data();
+        if (data != null) {
+          userModel = UserModel.fromJson(data: data);
+          emit(SuccessGetUsersDataState(userModel));
+          // print("User data retrieved: ${userModel!.firstName}");
+        } else {
+          print("No user data found for user ID: ${Constants.userID}");
+          emit(FailedToGetMyDataState());
+        }
+      } else {
+        print("User document does not exist for user ID: ${Constants.userID}");
+        emit(FailedToGetMyDataState());
+      }
+    } on FirebaseException catch (e) {
+      print("Error fetching user data from Firestore: $e");
+      emit(FailedToGetMyDataState());
+    }
+  }
   // get List of all the users from firebase [used for admin app]
 
   List<UserModel> users = [];

@@ -10,6 +10,31 @@ class AppTextStyle {
     color: Colors.white,
     fontFamily: "poppins",
   );
+  static TextStyle whiteSemiBoldTextStyle18 = const TextStyle(
+      fontSize: 18,
+      fontWeight: FontWeight.w600,
+      color: Colors.white,
+      fontFamily: "poppins",
+      letterSpacing: 1.4);
+  static TextStyle whiteBoldTextStyle16 = TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w600,
+    color: Colors.white.withOpacity(0.9),
+    fontFamily: "garet",
+  );
+  static TextStyle whiteBoldTextStyle18 = TextStyle(
+    fontSize: 18,
+    fontWeight: FontWeight.bold,
+    color: Colors.white.withOpacity(0.9),
+    fontFamily: "garet",
+  );
+  static TextStyle whiteTextStyle = TextStyle(
+    fontWeight: FontWeight.w600,
+    color: Colors.white.withOpacity(0.6),
+    fontFamily: "garet",
+    fontStyle: FontStyle.italic,
+  );
+
   static TextStyle cardName = const TextStyle(
     color: Colors.white,
     fontSize: 16,

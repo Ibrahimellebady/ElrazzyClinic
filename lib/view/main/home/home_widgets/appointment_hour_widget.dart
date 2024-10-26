@@ -1,3 +1,4 @@
+import 'package:elrazy_clinics/view/main/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -68,13 +69,94 @@ class AppointmentHourWidget extends StatelessWidget {
                         ),
                         InkWell(
                           onTap: () {
-                            appointmentCubit.updateAppointmentFromFireStore(
-                                appointmentTime.toIso8601String(), {
-                              "booked": bookedCount! - 1,
-                              "clientIDs": bookedClients
-                                  ?.where((id) => id != Constants.userID)
-                                  .toList()
-                            });
+                            showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Center(
+                                    child: Text(
+                                      "Are you sure you want to Delete this appointment?",
+                                      style:
+                                          AppTextStyle.mainColorBoldTextStyle16,
+                                    ),
+                                  ),
+                                  actions: <Widget>[
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        InkWell(
+                                          onTap: () {
+                                            if (bookedCount == 1) {
+                                              appointmentCubit
+                                                  .deleteAppointmentFromFireStore(
+                                                      appointmentTime
+                                                          .toIso8601String());
+                                            } else {
+                                              appointmentCubit
+                                                  .updateAppointmentFromFireStore(
+                                                      appointmentTime
+                                                          .toIso8601String(),
+                                                      {
+                                                    "booked": bookedCount! - 1,
+                                                    "clientIDs": bookedClients
+                                                        ?.where((id) =>
+                                                            id !=
+                                                            Constants.userID)
+                                                        .toList()
+                                                  });
+                                            }
+
+                                            Navigator.pushReplacement(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) =>
+                                                    HomeScreen(),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: Colors.red,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(16),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Delete It',
+                                              style: AppTextStyle
+                                                  .whiteBoldTextStyle18,
+                                            ),
+                                          ),
+                                        ),
+                                        InkWell(
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: Container(
+                                            padding: EdgeInsets.symmetric(
+                                                horizontal: 16, vertical: 4),
+                                            decoration: BoxDecoration(
+                                              color: ColorManager.mainColor,
+                                              borderRadius: BorderRadius.all(
+                                                Radius.circular(16),
+                                              ),
+                                            ),
+                                            child: Text(
+                                              'Go Back',
+                                              style: AppTextStyle
+                                                  .whiteBoldTextStyle18,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
                           },
                           child: Icon(
                             Icons.delete,
@@ -105,11 +187,93 @@ class AppointmentHourWidget extends StatelessWidget {
                         availability
                             ? InkWell(
                                 onTap: () {
-                                  appointmentCubit.sendAppointmentToFireStore(
-                                    appointmentID:
-                                        appointmentTime.toIso8601String(),
-                                    appointmentTime: appointmentTime,
-                                    clientID: '${Constants.userID}',
+                                  showDialog(
+                                    context: context,
+                                    builder: (BuildContext context) {
+                                      return AlertDialog(
+                                        title: Center(
+                                          child: Text(
+                                            "Are you sure you want to Book this appointment?",
+                                            style: AppTextStyle
+                                                .mainColorBoldTextStyle16,
+                                          ),
+                                        ),
+                                        actions: <Widget>[
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              InkWell(
+                                                onTap: () {
+                                                  appointmentCubit
+                                                      .sendAppointmentToFireStore(
+                                                    appointmentID:
+                                                        appointmentTime
+                                                            .toIso8601String(),
+                                                    appointmentTime:
+                                                        appointmentTime,
+                                                    clientID:
+                                                        '${Constants.userID}',
+                                                  );
+                                                  Navigator.pushReplacement(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          HomeScreen(),
+                                                    ),
+                                                  );
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        ColorManager.mainColor,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(16),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Book Now!',
+                                                    style: AppTextStyle
+                                                        .whiteBoldTextStyle18,
+                                                  ),
+                                                ),
+                                              ),
+                                              InkWell(
+                                                onTap: () {
+                                                  Navigator.pop(context);
+                                                },
+                                                child: Container(
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal: 16,
+                                                      vertical: 4),
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                        color: ColorManager
+                                                            .mainColor,
+                                                        width: 1),
+                                                    color: ColorManager
+                                                        .LighterGray,
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                      Radius.circular(16),
+                                                    ),
+                                                  ),
+                                                  child: Text(
+                                                    'Go Back',
+                                                    style: AppTextStyle
+                                                        .mainColorGaretTextStyle18,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      );
+                                    },
                                   );
                                 },
                                 child: Row(

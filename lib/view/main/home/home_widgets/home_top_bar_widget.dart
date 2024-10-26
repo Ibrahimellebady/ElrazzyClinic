@@ -43,12 +43,12 @@ class HomeTopBarWidget extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        "How are you today?",
+                        "We hope you are doing well today..",
                         style: TextStyle(
-                          fontWeight: FontWeight.w300,
-                          fontStyle: FontStyle.italic,
-                          color: ColorManager.LighterWhite,
-                        ),
+                            fontWeight: FontWeight.w300,
+                            fontStyle: FontStyle.italic,
+                            color: ColorManager.LighterWhite,
+                            fontFamily: 'garet'),
                       ),
                     ],
                   ),
